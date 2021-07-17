@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+  <head>
+    <title>socket.io example</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font: 1.4rem;
+      }
+      form {
+        display: flex;
+        background-color: #000;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+      }
+      .name {
+        width: 6rem;
+        padding: 1rem;
+      }
+      .msg {
+        flex: 1;
+        padding: 1rem;
+      }
+      .send {
+        width: 8rem;
+        background: #888;
+        padding: 1rem;
+      }
+      #messages {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
+      #messages li {
+        padding: 0.8rem 1rem;
+      }
+      #messages li:nth-child(odd) {
+        background: #eee;
+      }
+    </style>
+  </head>
+
+  <body>
+    <ul id="messages"></ul>
+    <form action="">
+      <input class ="name" id="name" autocomplete="off" placeholder="名前" />
+      <input class ="msg" id="msg" autocomplete="off" placeholder="メッセージ" />
+      <button class="send">送る</button>
+    </form>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.js" integrity="sha256-5i/mQ300M779N2OVDrl16lbohwXNUdzL/R2aVUXyXWA=" crossorigin="anonymous"></script>
+    <script>
+      const socket = io();
+      $('form').submit(() => {
+        var user = $('#name').val() === '' ? '名無し' : $('#name').val();
+        var message = user + '：' + $('#msg').val();
+        socket.emit('chat message', message);
+        $('#msg').val('');
+        return false;
+      });
+      socket.on('chat message', (msg) => {
+        $('#messages').append($('<li>').text(msg));
+      });
+    </script>
+  </body>
+</html>
